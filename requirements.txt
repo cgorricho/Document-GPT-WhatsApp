@@ -3,7 +3,7 @@ aiohttp-retry
 aiosignal
 anyio
 async-timeout
-attrs0
+attrs
 autopep8
 backoff
 blinker
