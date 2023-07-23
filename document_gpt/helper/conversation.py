@@ -30,7 +30,7 @@ def create_conversation() -> ConversationalRetrievalChain:
         retriever=db.as_retriever(),
         memory=memory,
         get_chat_history=lambda h: h,
-        verbose=True
+        verbose=False
     )
 
     return qa

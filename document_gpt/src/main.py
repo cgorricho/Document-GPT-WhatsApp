@@ -16,11 +16,12 @@ def twilio():
     query = request.form['Body']
     sender_id = request.form['From']
     print(sender_id, query)
+    print('*'*50)
     # TODO
     # get the user
     # if not create
     # create chat_history from the previous conversations
-    # quetion and answer
+    # question and answer
     res = qa(
         {
         'question': query,
@@ -29,7 +30,11 @@ def twilio():
     )
 
     print(res)
+    print('*'*50)
     
+    print(f'Largo de la respuesta: {len(res['answer'])}')
+    
+    #if  len(res['answer']) > 1500:
     send_message(sender_id, res['answer'])
 
     return 'OK', 200
