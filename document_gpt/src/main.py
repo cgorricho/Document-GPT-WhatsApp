@@ -32,7 +32,7 @@ def twilio():
     print(res)
     print('*'*50)
     
-    print('Largo de la respuesta: ': len(res['answer']))
+    print('Largo de la respuesta: ', len(res['answer']))
     
     #if  len(res['answer']) > 1500:
     send_message(sender_id, res['answer'])
