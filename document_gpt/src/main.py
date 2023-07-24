@@ -42,7 +42,7 @@ def twilio():
     for message in res['answer'].split('\n\n'):
         cont += 1
         send_message(sender_id, message)
-        print('Largo del mensaje ', cont, ': ', len(res['answer']), sep='')
+        print('Largo del mensaje ', cont, ': ', message, sep='')
         time.sleep(1 + random.randint(0,3))
 
     return 'OK', 200
