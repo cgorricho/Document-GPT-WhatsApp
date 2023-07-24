@@ -17,7 +17,7 @@ def home():
 @app.route('/twilio', methods=['POST'])
 def twilio():
     query = request.form['Body']
-    sender_id = request.form['From']
+    sender_id = request.form['From'].split(':')
     print(sender_id, query)
     print('*'*50)
     # TODO
@@ -36,13 +36,16 @@ def twilio():
     print(res)
     print('*'*50)
     
+    print('Largo de la historia: ', len(res['chat_history']))
     print('Largo de la respuesta: ', len(res['answer']))
+    
     cont = 0
     
     for message in res['answer'].split('\n\n'):
         cont += 1
         send_message(sender_id, message)
-        print('Largo del mensaje ', cont, ': ', message, sep='')
+        print('Largo del mensaje ', cont, ': ', len(message), sep='')
+        print('Mensaje: ', message)
         time.sleep(1 + random.randint(0,3))
 
     return 'OK', 200
