@@ -1,3 +1,6 @@
+import time
+import random
+
 from flask import Flask, request
 
 from document_gpt.helper.conversation import create_conversation
@@ -34,7 +37,8 @@ def twilio():
     
     print('Largo de la respuesta: ', len(res['answer']))
     
-    #if  len(res['answer']) > 1500:
-    send_message(sender_id, res['answer'])
+    for message in res['answer'].split('\n\n'):
+        send_message(sender_id, res['answer'])
+        time.sleep(1 + random.randin(0,2))
 
     return 'OK', 200
