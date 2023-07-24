@@ -39,6 +39,6 @@ def twilio():
     
     for message in res['answer'].split('\n\n'):
         send_message(sender_id, message)
-        time.sleep(1 + random.randin(0,2))
+        time.sleep(1 + random.randint(0,2))
 
     return 'OK', 200
