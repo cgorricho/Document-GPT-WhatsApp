@@ -25,6 +25,7 @@ def twilio():
     # if not create
     # create chat_history from the previous conversations
     # question and answer
+
     res = qa(
         {
         'question': query,
@@ -36,9 +37,12 @@ def twilio():
     print('*'*50)
     
     print('Largo de la respuesta: ', len(res['answer']))
+    cont = 0
     
     for message in res['answer'].split('\n\n'):
+        cont += 1
         send_message(sender_id, message)
-        time.sleep(1 + random.randint(0,2))
+        print('Largo del mensaje ', cont, ': ', len(res['answer']), sep='')
+        time.sleep(1 + random.randint(0,3))
 
     return 'OK', 200
