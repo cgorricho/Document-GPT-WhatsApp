@@ -17,7 +17,7 @@ def home():
 @app.route('/twilio', methods=['POST'])
 def twilio():
     query = request.form['Body']
-    sender_id = request.form['From'].split(':')
+    sender_id = request.form['From']
     print(sender_id, query)
     print('*'*50)
     # TODO
