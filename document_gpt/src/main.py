@@ -25,6 +25,7 @@ def twilio():
     # if not create
     # create chat_history from the previous conversations
     # question and answer
+    # debo terminar esta parte del codigo
 
     res = qa(
         {
