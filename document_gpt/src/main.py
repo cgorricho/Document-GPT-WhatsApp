@@ -10,16 +10,23 @@ qa = create_conversation()
 
 app = Flask(__name__)
 
+# crea el endpoint estandar
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return 'OK', 200
 
+# crea el endpoint (o ruta) a través de la cual se reciben y envían mensajes via Twilio
 @app.route('/twilio', methods=['POST'])
 def twilio():
+    # Recibe mensaje de Whatsapp via Twilio
     query = request.form['Body']
     sender_id = request.form['From']
-    print(sender_id, query)
+    print(sender_id.split(':')[1], query)
     print('*'*50)
+    
+    # Captura información del usuario
+    user = sender_id.split(':')[1]
+
     # TODO
     # get the user
     # if not create
@@ -34,8 +41,8 @@ def twilio():
         }
     )
 
-    print(res)
-    print('*'*50)
+    # print(res)
+    # print('*'*50)
     
     print('Largo de la historia: ', len(res['chat_history']))
     print('Largo de la respuesta: ', len(res['answer']))
