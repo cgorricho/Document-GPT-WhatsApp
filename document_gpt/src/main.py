@@ -33,11 +33,8 @@ def twilio():
     if user in users_history:
         chat_history = users_history[user]['chat_history']
     else:
-        chat_history = ''
-        users_history[user] = {
-            'date': datetime.now(),
-            'chat_history': chat_history,
-        }
+        chat_history = []
+    
 
     # TODO
     # get the user
@@ -59,9 +56,11 @@ def twilio():
     print('Largo de la historia: ', len(res['chat_history']))
     print('Largo de la respuesta: ', len(res['answer']))
     
+    chat_history.append((query, res['answer']))
+    
     users_history[user] = {
         'date': datetime.now(),
-        'chat_history': res['chat_history'],
+        'chat_history': chat_history,
     }
 
     print(users_history)
