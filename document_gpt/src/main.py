@@ -7,6 +7,7 @@ from document_gpt.helper.conversation import create_conversation
 from document_gpt.helper.twilio_api import send_message
 
 qa = create_conversation()
+users_history = {}
 
 app = Flask(__name__)
 
@@ -27,6 +28,16 @@ def twilio():
     # Captura información del usuario
     user = sender_id.split(':')[1]
 
+    # Chequea si hay historia para este usuario
+    if user in users_history:
+        chat_history = users_history[user]['chat_history']
+    else:
+        chat_history = ''
+        users_history[user] = {
+            'date': time.now()
+            'chat_history': chat_history
+        }
+
     # TODO
     # get the user
     # if not create
@@ -37,23 +48,33 @@ def twilio():
     res = qa(
         {
         'question': query,
-        'chat_history': {}
+        'chat_history': chat_history
         }
     )
 
-    # print(res)
-    # print('*'*50)
+    print(res)
+    print('*'*50)
     
     print('Largo de la historia: ', len(res['chat_history']))
     print('Largo de la respuesta: ', len(res['answer']))
     
+    users_history[user] = {
+        'date': time.now(),
+        'chat_history' = res['chat_history'],
+        }
+
+    print(users_history)
+    print('*'*50)
+
     cont = 0
     
     for message in res['answer'].split('\n\n'):
         cont += 1
-        send_message(sender_id, message)
-        print('Largo del mensaje ', cont, ': ', len(message), sep='')
+        send_message(sender_id, message)            # utiliza función send_message para enviar mensaje via Twilio
+        print('Largo del mensaje ', cont, ': ',     # imprime a la consola
+              len(message), sep='')
         print('Mensaje: ', message)
-        time.sleep(1 + random.randint(0,3))
+        time.sleep(1 + random.randint(0,2))         # espera un tiempo aleatorio entre 1 y 4 segundos
+                                                    # se añade esto para no sobrepasar el rate de Twilio
 
     return 'OK', 200
