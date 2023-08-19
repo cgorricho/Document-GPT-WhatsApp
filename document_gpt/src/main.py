@@ -34,8 +34,8 @@ def twilio():
     else:
         chat_history = ''
         users_history[user] = {
-            'date': time.now()
-            'chat_history': chat_history
+            'date': time.now(),
+            'chat_history': chat_history,
         }
 
     # TODO
@@ -60,8 +60,8 @@ def twilio():
     
     users_history[user] = {
         'date': time.now(),
-        'chat_history' = res['chat_history'],
-        }
+        'chat_history': res['chat_history'],
+    }
 
     print(users_history)
     print('*'*50)
