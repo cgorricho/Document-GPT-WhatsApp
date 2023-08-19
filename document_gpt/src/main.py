@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 import random
 
 from flask import Flask, request
@@ -34,7 +35,7 @@ def twilio():
     else:
         chat_history = ''
         users_history[user] = {
-            'date': time.now(),
+            'date': datetime.now(),
             'chat_history': chat_history,
         }
 
@@ -59,7 +60,7 @@ def twilio():
     print('Largo de la respuesta: ', len(res['answer']))
     
     users_history[user] = {
-        'date': time.now(),
+        'date': datetime.now(),
         'chat_history': res['chat_history'],
     }
 
