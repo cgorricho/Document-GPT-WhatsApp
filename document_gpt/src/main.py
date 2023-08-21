@@ -57,6 +57,7 @@ def twilio():
     print('Largo de la respuesta: ', len(res['answer']))
     
     chat_history.append((query, res['answer']))
+    # print('*'*50)
     
     users_history[user] = {
         'date': datetime.now(),
@@ -76,5 +77,10 @@ def twilio():
         print('Mensaje: ', message)
         time.sleep(1 + random.randint(0,2))         # espera un tiempo aleatorio entre 1 y 4 segundos
                                                     # se añade esto para no sobrepasar el rate de Twilio
+
+    print(res['chat_history'])
+    print(users_history['user']['chat_history'])
+    print('*'*50)
+
 
     return 'OK', 200
