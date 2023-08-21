@@ -82,7 +82,7 @@ def twilio():
                                                     # se añade esto para no sobrepasar el rate de Twilio
 
     print('Historia de chat del modelo: ', res['chat_history'])
-    print('Historia de chat del usuario: ', users_history['user']['chat_history'])
+    print('Historia de chat del usuario: ', users_history[user]['chat_history'])
     print('*'*50)
 
 
