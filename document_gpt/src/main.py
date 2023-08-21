@@ -15,10 +15,7 @@ qa = create_conversation()
 users_history = {}
 
 # se conecta a un instancia de Redis eb Render
-redis_host = 'redis://red-cj8obc8eba7s73ea3bc0'
-r = redis.Redis(host='red-cj8obc8eba7s73ea3bc0',
-                port=6379,
-                decode_responses=True)
+r = redis.from_url(os.environ['REDIS_URL'])
 
 app = Flask(__name__)
 
