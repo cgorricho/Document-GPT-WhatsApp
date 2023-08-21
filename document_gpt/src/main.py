@@ -15,7 +15,7 @@ qa = create_conversation()
 users_history = {}
 
 # se conecta a un instancia de Redis eb Render
-redis_host = 'redis://red-cj8obc8eba7s73ea3bc0:6379'
+redis_host = 'redis://red-cj8obc8eba7s73ea3bc0'
 r = redis.Redis(host=redis_host,
                 port=6379,
                 decode_responses=True)
