@@ -15,8 +15,9 @@ qa = create_conversation()
 # inicializa un diccionario para llevar la memoria de chat
 users_history = {}
 
-# se conecta a un instancia de Redis eb Render
-r = redis.from_url(os.environ['REDIS_URL'])
+# se conecta a un instancia de Redis en Render
+redis_external_url = 'rediss://red-cj8obc8eba7s73ea3bc0:h8ccn0CtO07AX2uk0IG2I8kH9mCowkAz@oregon-redis.render.com:6379'
+r = redis.from_url(redis_external_url)
 
 app = Flask(__name__)
 
