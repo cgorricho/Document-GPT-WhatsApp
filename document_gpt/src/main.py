@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 import random
 import redis
-import os
+from ast import literal_eval
 
 from flask import Flask, request
 
@@ -41,16 +41,9 @@ def twilio():
     # Captura información del usuario
     user = sender_id.split(':')[1]
 
-    # Chequea si hay historia para este usuario
-    # if user in users_history:
-    #     chat_history = users_history[user]['chat_history']
-    # else:
-    #     chat_history = []
-    # 
-    
     # confirma si existe el key de este hash en Redis
     if r.hget(user, 'chat_history'):
-        chat_history = r.hget(user, 'chat_history')
+        chat_history = [literal_eval(item) for item in r.hget(user, 'chat_history').split('###')]
     else:
         chat_history = []
 
@@ -69,6 +62,7 @@ def twilio():
     print('Largo de la respuesta: ', len(res['answer']))
     
     chat_history.append((query, res['answer']))
+    chat_history_redis = '###'.join([str(item) for item in chat_history])
         
     # users_history[user] = {
     #     'date': datetime.now(),
@@ -78,7 +72,7 @@ def twilio():
     # crea / actualiza chat_history en Redis 
     r.hset(user, mapping={
        'date': str(datetime.now()), 
-       'chat_history': chat_history})
+       'chat_history': chat_history_redis})
 
     cont = 0                                        # contador de mensajes
     
