@@ -1,14 +1,24 @@
 import time
 from datetime import datetime
 import random
+import redis
 
 from flask import Flask, request
 
 from document_gpt.helper.conversation import create_conversation
 from document_gpt.helper.twilio_api import send_message
 
+# Incicializa una variable tipo create_conversation --> ConversationalRetrieverChain
 qa = create_conversation()
+
+# inicializa un diccionario para llevar la memoria de chat
 users_history = {}
+
+# se conecta a un instancia de Redis eb Render
+redis_host = 'redis://red-cj8obc8eba7s73ea3bc0:6379'
+r = redis.Redis(host=redis_host,
+                port=6379,
+                decode_responses=True)
 
 app = Flask(__name__)
 
@@ -20,7 +30,6 @@ def home():
 # crea el endpoint (o ruta) a través de la cual se reciben y envían mensajes via Twilio
 @app.route('/twilio', methods=['POST'])
 def twilio():
-    global users_history
     
     # Recibe mensaje de Whatsapp via Twilio
     query = request.form['Body']
@@ -34,19 +43,19 @@ def twilio():
     user = sender_id.split(':')[1]
 
     # Chequea si hay historia para este usuario
-    if user in users_history:
-        chat_history = users_history[user]['chat_history']
+    # if user in users_history:
+    #     chat_history = users_history[user]['chat_history']
+    # else:
+    #     chat_history = []
+    # 
+    
+    # confirma si existe el key de este hash en Redis
+    if r.hget(user, 'chat_history'):
+        chat_history = r.hget(user, 'chat_history')
     else:
         chat_history = []
-    
 
-    # TODO
-    # get the user
-    # if not create
-    # create chat_history from the previous conversations
-    # question and answer
-    # debo terminar esta parte del codigo
-
+    # Genera una respuesta a la pregunta
     res = qa(
         {
         'question': query,
@@ -62,10 +71,15 @@ def twilio():
     
     chat_history.append((query, res['answer']))
         
-    users_history[user] = {
-        'date': datetime.now(),
-        'chat_history': chat_history,
-    }
+    # users_history[user] = {
+    #     'date': datetime.now(),
+    #     'chat_history': chat_history,
+    # }
+
+    # crea / actualiza chat_history en Redis 
+    r.hset(user, mapping={
+       'date': datetime.now(), 
+       'chat_history': chat_history})
 
     cont = 0                                        # contador de mensajes
     
@@ -77,11 +91,13 @@ def twilio():
         print('Mensaje: ', message)
         time.sleep(1 + random.randint(0,2))         # espera un tiempo aleatorio entre 1 y 4 segundos
                                                     # se añade esto para no sobrepasar el rate de Twilio
-    print('Historia de chat de todos los usuarios: ', users_history)
+    
+    print('*'*50)
+    print('Historia de chat de todos los usuarios: ', r.hgetall(user))
     print('*'*50)
 
     print('Historia de chat del modelo: ', res['chat_history'])
-    print('Historia de chat del usuario: ', users_history[user]['chat_history'])
+    print('Historia de chat del usuario: ', chat_history)
     print('*'*50)
 
 
