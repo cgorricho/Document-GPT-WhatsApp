@@ -20,10 +20,14 @@ def home():
 # crea el endpoint (o ruta) a través de la cual se reciben y envían mensajes via Twilio
 @app.route('/twilio', methods=['POST'])
 def twilio():
+    global users_history
+    
     # Recibe mensaje de Whatsapp via Twilio
     query = request.form['Body']
     sender_id = request.form['From']
-    print(sender_id.split(':')[1], query)
+    
+    print('//'*50)
+    print('Pregunta inicial: ', sender_id.split(':')[1], query)
     print('*'*50)
     
     # Captura información del usuario
@@ -50,21 +54,20 @@ def twilio():
         }
     )
 
-    print(res)
+    print('Respuesta del modelo: ', res)
     print('*'*50)
     
     print('Largo de la historia: ', len(res['chat_history']))
     print('Largo de la respuesta: ', len(res['answer']))
     
     chat_history.append((query, res['answer']))
-    # print('*'*50)
-    
+        
     users_history[user] = {
         'date': datetime.now(),
         'chat_history': chat_history,
     }
 
-    print(users_history)
+    print('Historia de chat de todos los usuarios: ', users_history)
     print('*'*50)
 
     cont = 0
@@ -78,8 +81,8 @@ def twilio():
         time.sleep(1 + random.randint(0,2))         # espera un tiempo aleatorio entre 1 y 4 segundos
                                                     # se añade esto para no sobrepasar el rate de Twilio
 
-    print(res['chat_history'])
-    print(users_history['user']['chat_history'])
+    print('Historia de chat del modelo: ', res['chat_history'])
+    print('Historia de chat del usuario: ', users_history['user']['chat_history'])
     print('*'*50)
 
 
