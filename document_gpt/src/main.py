@@ -67,10 +67,7 @@ def twilio():
         'chat_history': chat_history,
     }
 
-    print('Historia de chat de todos los usuarios: ', users_history)
-    print('*'*50)
-
-    cont = 0
+    cont = 0                                        # contador de mensajes
     
     for message in res['answer'].split('\n\n'):
         cont += 1
@@ -80,6 +77,8 @@ def twilio():
         print('Mensaje: ', message)
         time.sleep(1 + random.randint(0,2))         # espera un tiempo aleatorio entre 1 y 4 segundos
                                                     # se añade esto para no sobrepasar el rate de Twilio
+    print('Historia de chat de todos los usuarios: ', users_history)
+    print('*'*50)
 
     print('Historia de chat del modelo: ', res['chat_history'])
     print('Historia de chat del usuario: ', users_history[user]['chat_history'])
