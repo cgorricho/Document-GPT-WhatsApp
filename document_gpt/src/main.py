@@ -63,7 +63,7 @@ def twilio():
     
     chat_history.append((query, res['answer']))
     chat_history_redis = '###'.join([str(item) for item in chat_history])
-    chat_history_redis = chat_history_redis[-500:]
+    chat_history_redis = chat_history_redis[-5000:]
     separator = chat_history_redis.find('###') + 3
     chat_history_redis = chat_history_redis[separator:]
         
