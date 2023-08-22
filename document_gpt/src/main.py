@@ -80,7 +80,7 @@ def twilio():
     # crea / actualiza chat_history en Redis 
     r.hset(user, mapping={
        'date': str(datetime.now()), 
-       'chat_history': chat_history_redis})
+       'chat_history': str(chat_history_redis)})
 
     cont = 0                                        # contador de mensajes
     
