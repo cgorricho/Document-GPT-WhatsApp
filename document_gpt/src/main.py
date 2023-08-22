@@ -42,6 +42,7 @@ def twilio():
     user = sender_id.split(':')[1]
 
     # confirma si existe el key de este hash en Redis
+    # si existe, convierte la historia de 'srting' a 'list' of tuples
     if r.hget(user, 'chat_history'):
         chat_history = [literal_eval(item) for item in str(r.hget(user, 'chat_history')).split('###')]
     else:
@@ -55,23 +56,27 @@ def twilio():
         }
     )
 
+    # imprime resultados en la consola
     print('Respuesta del modelo: ', res)
     print('*'*50)
     
     print('Largo de la historia: ', len(res['chat_history']))
     print('Largo de la respuesta: ', len(res['answer']))
     
+    
+    # agrega la última pregunta y respuesta a la historia
     chat_history.append((query, res['answer']))
-    chat_history_redis = '###'.join([str(item) for item in chat_history])
-    chat_history_redis = chat_history_redis[-5000:]
-    separator = chat_history_redis.find('###') + 3
-    chat_history_redis = chat_history_redis[separator:]
-        
-    # users_history[user] = {
-    #     'date': datetime.now(),
-    #     'chat_history': chat_history,
-    # }
 
+    # convierte la historia en 'string' para almacenar en Redis
+    chat_history_redis = '###'.join([str(item) for item in chat_history])
+    
+    # si el string con la historia es mayor de 5000 caracteres
+    # trunca el string y lo ajusta a la tupla más cercana
+    if len(chat_history_redis) >= 5000:
+        chat_history_redis = chat_history_redis[-5000:]
+        separator = chat_history_redis.find('###') + 3
+        chat_history_redis = chat_history_redis[separator:]
+        
     # crea / actualiza chat_history en Redis 
     r.hset(user, mapping={
        'date': str(datetime.now()), 
@@ -79,6 +84,7 @@ def twilio():
 
     cont = 0                                        # contador de mensajes
     
+    # imprime mensajes en bloques separados por \n\n
     for message in res['answer'].split('\n\n'):
         cont += 1
         send_message(sender_id, message)            # utiliza función send_message para enviar mensaje via Twilio
@@ -88,8 +94,9 @@ def twilio():
         time.sleep(1 + random.randint(0,2))         # espera un tiempo aleatorio entre 1 y 4 segundos
                                                     # se añade esto para no sobrepasar el rate de Twilio
     
+    # improme resultados a la consola
     print('*'*50)
-    print('Historia de chat de todos los usuarios: ', r.hgetall(user))
+    print('Historia de chat de usuario en Redis: ', str(r.hgetall(user)))
     print('*'*50)
 
     print('Historia de chat del modelo: ', res['chat_history'])
