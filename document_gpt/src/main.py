@@ -43,7 +43,7 @@ def twilio():
 
     # confirma si existe el key de este hash en Redis
     if r.hget(user, 'chat_history'):
-        chat_history = [literal_eval(item) for item in r.hget(user, 'chat_history').split('###')]
+        chat_history = [literal_eval(item) for item in str(r.hget(user, 'chat_history')).split('###')]
     else:
         chat_history = []
 
@@ -63,6 +63,9 @@ def twilio():
     
     chat_history.append((query, res['answer']))
     chat_history_redis = '###'.join([str(item) for item in chat_history])
+    chat_history_redis = chat_history_redis[-500:]
+    separator = chat_history_redis.find('###') + 3
+    chat_history_redis = chat_history_redis[separator:]
         
     # users_history[user] = {
     #     'date': datetime.now(),
