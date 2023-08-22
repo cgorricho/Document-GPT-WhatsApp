@@ -17,7 +17,9 @@ users_history = {}
 
 # se conecta a un instancia de Redis en Render
 redis_external_url = 'rediss://red-cj8obc8eba7s73ea3bc0:h8ccn0CtO07AX2uk0IG2I8kH9mCowkAz@oregon-redis.render.com:6379'
-r = redis.from_url(redis_external_url)
+r = redis.from_url(
+    redis_external_url, 
+    decode_responses=True)
 
 app = Flask(__name__)
 
@@ -80,7 +82,7 @@ def twilio():
     # crea / actualiza chat_history en Redis 
     r.hset(user, mapping={
        'date': str(datetime.now()), 
-       'chat_history': str(chat_history_redis)})
+       'chat_history': chat_history_redis})
 
     cont = 0                                        # contador de mensajes
     
