@@ -93,7 +93,7 @@ def twilio():
         print('Largo del mensaje ', cont, ': ',     # imprime a la consola
               len(message), sep='')
         print('Mensaje: ', message)
-        time.sleep(1 + random.randint(0,2))         # espera un tiempo aleatorio entre 1 y 4 segundos
+        time.sleep(1 + random.randint(0,2))         # espera un tiempo aleatorio entre 1 y 3 segundos
                                                     # se añade esto para no sobrepasar el rate de Twilio
     
     # improme resultados a la consola
